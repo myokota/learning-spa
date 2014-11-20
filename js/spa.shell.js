@@ -12,6 +12,7 @@ spa.shell = (function () {
 				anchor_schema_map : {
 					chat : { opened : true, closed : true }
 				},
+				resize_interval : 200,
 				main_html : toString()
 					+ '<div class="spa-shell-head">'
 						+ '<div class="spa-shell-head-logo"></div>'
@@ -26,7 +27,9 @@ spa.shell = (function () {
 					+ '<div class="spa-shell-modal"></div>',
 			},
 			stateMap = { 
+				$container : undefined,
 				anchor_map : {},
+				resize_idto : undefined
 			},
 			jqueryMap = {},
 
@@ -44,47 +47,6 @@ spa.shell = (function () {
 				$container : $container,
 			};
 		};
-
-		/*
-		toggleChat = function( do_extend, callback ) {
-			var
-				px_chat_ht = jqueryMap.$chat.height(),
-				is_open = px_chat_ht === configMap.chat_extend_height,
-				is_closed = px_chat_ht === configMap.chat_retract_height,
-				is_sliding = ! is_open && ! is_closed;
-
-			if ( is_sliding ) { return false; }
-
-			if ( do_extend ) {
-				jqueryMap.$chat.animate(
-					{ height : configMap.chat_extend_height },
-					configMap.chat_extend_time,
-					function () {
-						jqueryMap.$chat.attr(
-							'title', configMap.chat_extended_title
-						);
-						stateMap.is_chat_retrected = false;
-						if ( callback ) { callback( jqueryMap.$chat ); }
-					}
-				);
-				return true;
-			}
-
-			jqueryMap.$chat.animate(
-				{ height : configMap.chat_retract_height },
-				configMap.chat_retract_time,
-				function () {
-						jqueryMap.$chat.attr(
-							'title', configMap.chat_extended_title
-						);
-						stateMap.is_chat_retrected = true;
-					if ( callback ) { callback( jqueryMap.$chat ); }
-				}
-			);
-			return true;
-
-		};
-		*/
 
 		changeAnchorPart = function ( arg_map ) {
 			var
@@ -120,7 +82,6 @@ spa.shell = (function () {
 
 			return bool_return;
 		};
-
 
 		onHashchange = function ( event ) {
 			var 
@@ -168,17 +129,19 @@ spa.shell = (function () {
 
 			
 			return false;
-		}
-				
-		/*
-		onClickChat = function ( event ) {
-			changeAnchorPart({
-				chat: ( stateMap.is_chat_retrected ? 'open' : 'closed' )
-			});
-
-			return false;
 		};
-		*/
+				
+		onResize = function () {
+			if ( stateMap.resize_idto ) { return true }
+
+			spa.chat.handleResize();
+			stateMap.resize_idto = setTimeout(
+					function () { stateMap.resize_idto = undefined; },
+					configMap.resize_interval
+			);
+
+			return true;
+		};
 
 		setChatAnchor = function ( position_type ) {
 			return changeAnchorPart({ chat : position_type });
@@ -202,7 +165,7 @@ spa.shell = (function () {
 
 			spa.chat.initModule( jqueryMap.$container );
 
-			$(window).bind( 'hashchange', onHashchange ).trigger( 'hashchange' );
+			$(window).bind( 'resize', onResize ).bind( 'hashchange', onHashchange ).trigger( 'hashchange' );
 		};
 
 		return {initModule : initModule };
