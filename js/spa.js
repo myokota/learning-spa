@@ -7,6 +7,7 @@
 /*global $, spa:ture */
 
 var spa = (function () {
+	'use strict';
 	var initModule = function ($container) {
 	/*
 		$container.html(
@@ -16,6 +17,7 @@ var spa = (function () {
 			);
 	*/
 		console.log('spa: ' + $container.toString() );
+		spa.model.initModule();
 		spa.shell.initModule( $container );
 	};
 
