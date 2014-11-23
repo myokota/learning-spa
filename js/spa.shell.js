@@ -1,9 +1,3 @@
-/*jslint         browser : true, continue : true,
-  devel  : true, indent  : 2,    maxerr   : 50,
-  newcap : true, nomen   : true, plusplus : true,
-  regexp : true, sloppy  : true, vars     : false,
-  white  : true
-*/
 /*global $, spa:true */
 
 spa.shell = (function () {
@@ -13,18 +7,18 @@ spa.shell = (function () {
 					chat : { opened : true, closed : true }
 				},
 				resize_interval : 200,
-				main_html : toString()
-					+ '<div class="spa-shell-head">'
-						+ '<div class="spa-shell-head-logo"></div>'
-						+ '<div class="spa-shell-head-acct"></div>'
-						+ '<div class="spa-shell-head-search"></div>'
-					+ '</div>'
-					+ '<div class="spa-shell-main">'
-						+ '<div class="spa-shell-main-nav"></div>'
-						+ '<div class="spa-shell-main-content"></div>'
-					+ '</div>'
-					+ '<div class="spa-shell-foot"></div>'
-					+ '<div class="spa-shell-modal"></div>',
+				main_html : String() +
+					'<div class="spa-shell-head">' +
+						'<div class="spa-shell-head-logo"></div>' +
+						'<div class="spa-shell-head-acct"></div>' +
+						'<div class="spa-shell-head-search"></div>' +
+					'</div>' +
+					'<div class="spa-shell-main">' +
+						'<div class="spa-shell-main-nav"></div>' +
+						'<div class="spa-shell-main-content"></div>' +
+					'</div>' +
+					'<div class="spa-shell-foot"></div>' +
+					'<div class="spa-shell-modal"></div>'
 			},
 			stateMap = { 
 				$container : undefined,
@@ -34,7 +28,7 @@ spa.shell = (function () {
 			jqueryMap = {},
 
 			copyAnchorMap, setJqueryMap, 
-			changeAnchorPart, onHashchange, 
+			changeAnchorPart, onHashchange, onResize,
 			setChatAnchor, initModule;
 
 		copyAnchorMap = function () {
@@ -87,7 +81,7 @@ spa.shell = (function () {
 			var 
 				_s_chat_previous, _s_chat_proposed, s_chat_proposed,
 				anchor_map_proposed, 
-				is_ok = true;
+				is_ok = true,
 				anchor_map_previous = copyAnchorMap();
 
 			try { anchor_map_proposed = $.uriAnchor.makeAnchorMap(); }
@@ -132,7 +126,7 @@ spa.shell = (function () {
 		};
 				
 		onResize = function () {
-			if ( stateMap.resize_idto ) { return true }
+			if ( stateMap.resize_idto ) { return true; }
 
 			spa.chat.handleResize();
 			stateMap.resize_idto = setTimeout(
@@ -148,7 +142,6 @@ spa.shell = (function () {
 		};
 
 		initModule = function ( $container ) {
-			console.log('initModule: ' + $container.toString() );
 			stateMap.$container = $container;
 			$container.html( configMap.main_html );
 			setJqueryMap();

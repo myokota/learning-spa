@@ -5,7 +5,7 @@ spa.util = (function () {
 			var error = new Error();
 
 			error.name = name_text;
-			error.massage = msg_text;
+			error.message = msg_text;
 
 			if (data) { error.data = data; }
 
@@ -26,14 +26,14 @@ spa.util = (function () {
 					}
 					else {
 						error = makeError( 'Bad input',
-							'Setting config key |' + key_name + '| is not suppoerted'
+							'Setting config key |' + key_name + '| is not supported'
 						);
 
 						throw error;
 					}
 				}
 			}
-		}
+		};
 
 		return {
 			makeError : makeError,

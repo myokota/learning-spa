@@ -1,23 +1,21 @@
 spa.chat = (function () {
 		var
 			configMap = {
-				main_html : String()
-					+ '<div class="spa-chat">'
-					  + '<div class="spa-chat-head">'
-					    + '<div class="spa-chat-head-toggle">+</div>'
-					    + '<div class="spa-chat-head-title">'
-						  + 'Chat'
-						+ '</div>'
-					  + '</div>'
-					  + '<div class="spa-chat-closer">x</div>'
-					  + '<div class="spa-chat-sizer">'
-					    + '<div class="spa-chat-msgs"></div>'
-					    + '<div class="spa-chat-box">'
-					      + '<input type="text"/>'
-					      + '<div>send</div>'
-					    + '</div>'
-					  + '</div>'
-				    + '</div>',
+				main_html : String() + 
+					'<div class="spa-chat">' + 
+					  '<div class="spa-chat-head">' + 
+					    '<div class="spa-chat-head-toggle">+</div>' + 
+					    '<div class="spa-chat-head-title">Chat</div>' + 
+					  '</div>' + 
+					  '<div class="spa-chat-closer">x</div>' + 
+					  '<div class="spa-chat-sizer">' + 
+					    '<div class="spa-chat-msgs"></div>' + 
+					    '<div class="spa-chat-box">' + 
+					      '<input type="text"/>' + 
+					      '<div>send</div>' + 
+					    '</div>' + 
+					  '</div>' + 
+					'</div>',
 
 				settable_map : {
 					slider_open_time : true,
@@ -37,13 +35,13 @@ spa.chat = (function () {
 				slider_opened_em : 18,
 				slider_closed_em : 2,
 				slider_opened_min_em : 10,
-				slider_height_min_em : 20,
+				window_height_min_em : 20,
 				slider_opened_title : 'Click to close',
 				slider_closed_title : 'Click to open',
 
 				chat_model : null,
 				people_model : null,
-				set_chat_anchor : null,
+				set_chat_anchor : null
 			},
 
 			stateMap = { 
@@ -57,18 +55,17 @@ spa.chat = (function () {
 
 			jqueryMap = {},
 
-			setJequeryMap, getEmSize, setPxSizes, setSliderPosition,
-			onClickToggle, configMap, initModule,
-			removeSlider, handleResize
+			setJqueryMap, getEmSize, setPxSizes, setSliderPosition,
+			onClickToggle, initModule, removeSlider, handleResize, configModule
 			;
 
 			getEmSize = function ( elem ) {
 				return Number(
-					getComputedStyle( elem, '' ).fontSize.match(/\d\.?\d*/)[0]
+					getComputedStyle( elem, '' ).fontSize.match(/\d*\.?\d*/)[0]
 				);
 			};
 			// DOM method
-			setJequeryMap = function () {
+			setJqueryMap = function () {
 				var $append_target = stateMap.$append_target,
 					$slider = $append_target.find( '.spa-chat' );
 
@@ -91,10 +88,8 @@ spa.chat = (function () {
 						( $(window).height() / px_per_em ) + 0.5
 				);
 
-				opened_height_em
-				   	= window_height_em > configMap.window_height_em 
-					? configMap.slider_opened_em
-					: configMap.slider_opened_min_em;
+				opened_height_em = window_height_em > configMap.window_height_min_em ? 
+					configMap.slider_opened_em : configMap.slider_opened_min_em;
 
 				stateMap.px_per_em = px_per_em;
 				stateMap.slider_closed_px = configMap.slider_closed_em * px_per_em;
@@ -159,7 +154,7 @@ spa.chat = (function () {
 				}
 
 				return false;
-			}
+			};
 
 			// Public method
 			configModule = function ( input_map ) {
@@ -170,12 +165,12 @@ spa.chat = (function () {
 				});
 
 				return true;
-			}
+			};
 
 			initModule = function ( $append_target ) {
 				$append_target.append( configMap.main_html );
 				stateMap.$append_target = $append_target;
-				setJequeryMap();
+				setJqueryMap();
 				setPxSizes();
 
 				jqueryMap.$toggle.prop( 'title' , configMap.slider_closed_title );
@@ -183,7 +178,7 @@ spa.chat = (function () {
 				stateMap.position_type = 'closed';
 
 				return true;
-			}
+			};
 
 			removeSlider = function () {
 				if (jqueryMap.$slider ) {
