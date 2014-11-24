@@ -41,7 +41,7 @@ spa.fake = (function () {
 			};
 
 			emit_sio = function ( msg_type, data ) {
-				var person_map;
+				var person_map, i;
 
 				if ( msg_type === 'adduser' && callback_map.userupdate ) {
 					setTimeout( function () {
@@ -77,6 +77,17 @@ spa.fake = (function () {
 					}
 					send_listchange();
 				}
+
+        if ( msg_type === 'updateavatar' && callback_map.listchange ) {
+          for ( i = 0; i < peopleList.length; i++ ) {
+            if (peopleList[ i ]._id === data.person_id ) {
+              peopleList[ i ].css_map = data.css_map;
+              break;
+            }
+          }
+
+          callback_map.listchange([ peopleList ]);
+        }
 			};
 
 			emit_mock_msg = function () {
@@ -87,7 +98,7 @@ spa.fake = (function () {
 							dest_id : user.id,
 							dest_name : user.name,
 							sender_id : 'id_04',
-							msg_text : 'Hi there' + user.name + '! Wilma here.'
+							msg_text : 'Hi there ' + user.name + '! Wilma here.'
 						}]);
 					}
 					else {

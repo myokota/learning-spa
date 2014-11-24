@@ -126,15 +126,13 @@ spa.model = (function () {
 		};
 
 		logout = function () {
-			var is_removed, user = stateMap.user;
+			var user = stateMap.user;
 
 			chat._leave();
-			is_removed = removePerson(user);
 			stateMap.user = stateMap.anon_user;
+      clearPeopleDb();
 
 			$.gevent.publish( 'spa-logout', [ user ] );
-
-			return is_removed;
 		};
 
 		return {
@@ -150,12 +148,13 @@ spa.model = (function () {
 		var _publish_listchange, _publish_updatechat,
 		    _update_list, _leave_chat, 
 		    get_chatee, join_chat, send_msg, set_chatee,
+        update_avatar,
 		    chatee = null;
 
 		_update_list = function( arg_list ) {
-			var i, person_map, make_person_map,
+			var i, person_map, make_person_map, person,
 			    people_list = arg_list[ 0 ],
-			    is_chatee_online = null;
+			    is_chatee_online = false;
 
 			clearPeopleDb();
 
@@ -163,7 +162,7 @@ spa.model = (function () {
 			for ( i = 0; i < people_list.length; i++ ) {
 				person_map = people_list[ i ];
 
-				if ( ! person_map.name ) { continue; }
+				if ( ! person_map.name ) { continue PERSON; }
 
 				if ( stateMap.user && stateMap.user.id === person_map._id ) {
 					stateMap.user.css_map = person_map.css_map;
@@ -177,16 +176,17 @@ spa.model = (function () {
 					name : person_map.name
 				};
 
+        person = makePerson( make_person_map );
+
 				if ( chatee && chatee.id === make_person_map.id ) {
 					is_chatee_online = true;
+          chatee = person;
 				}
-
-				makePerson( make_person_map );
-
-				if ( chatee && ! is_chatee_online ) { set_chatee(''); }
 			}
 
 			stateMap.people_db.sort( 'name' );
+
+			if ( chatee && ! is_chatee_online ) { set_chatee(''); }
 		};
 
 		_publish_listchange = function ( arg_list ) {
@@ -223,6 +223,10 @@ spa.model = (function () {
 
 		join_chat = function () {
 			var sio;
+
+      if ( stateMap.is_connected ) {
+        return false;
+      }
 
 			if ( stateMap.user.get_is_anon() ) {
 				console.warn( 'User must be defined vefore joining chat' );
@@ -281,18 +285,24 @@ spa.model = (function () {
 			return true;
 		};
 
+    update_avatar = function ( avatar_update_map ) {
+			var sio = isFakeData ? spa.fake.mockSio : spa.data.getSio();
+      if ( sio ) {
+        sio.emit( 'updateavatar', avatar_update_map );
+      }
+    };
+
 		return {
 			_leave : _leave_chat,
 			get_chatee : get_chatee,
 			join : join_chat,
 			send_msg : send_msg,
-			set_chatee : set_chatee
+			set_chatee : set_chatee,
+      update_avatar : update_avatar
 		};
-	})();
+	}());
 
 	initModule = function () {
-		var i, people_list, person_map;
-
 		stateMap.anon_user = makePerson({
 				cid : configMap.anon_id,
 				id : configMap.anon_id,
