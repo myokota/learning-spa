@@ -48,7 +48,7 @@ spa.fake = (function () {
 						person_map = {
 							_id : makeFakeId(),
 							name : data.name,
-							css_map : data.css
+							css_map : data.css_map
 						};
 						peopleList.push( person_map );
 						callback_map.userupdate( [person_map] );
@@ -73,7 +73,7 @@ spa.fake = (function () {
 
 					if ( listchange_idto ) {
 						clearTimeout( listchange_idto );
-						listchange_idto = null;
+						listchange_idto = undefined;
 					}
 					send_listchange();
 				}
@@ -99,7 +99,7 @@ spa.fake = (function () {
 			send_listchange = function () {
 				listchange_idto = setTimeout( function () {
 					if (callback_map.listchange ) {
-						callback_map.listchange([ people_list ]);
+						callback_map.listchange([ peopleList ]);
 						emit_mock_msg();
 						listchange_idto = undefined;
 					} 
@@ -108,6 +108,8 @@ spa.fake = (function () {
 					}
 				}, 1000 );
 			};
+
+      send_listchange();
 
 			return { 
 				emit : emit_sio,

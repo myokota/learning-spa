@@ -273,7 +273,7 @@ spa.model = (function () {
 				new_chatee = null;
 			}
 
-			$.gevent.publis( 'spa-setchatee', { 
+			$.gevent.publish( 'spa-setchatee', { 
 				old_chatee : chatee,
 				new_chatee : new_chatee
 			});
