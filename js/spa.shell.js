@@ -42,7 +42,7 @@ spa.shell = (function () {
 			jqueryMap = { 
 				$container : $container,
 				$acct : $container.find('.spa-shell-head-acct'),
-				$nav : $container.find('.spa-shell-head-nav'),
+				$nav : $container.find('.spa-shell-main-nav'),
 			};
 		};
 
@@ -183,6 +183,13 @@ spa.shell = (function () {
 			});
 
 			spa.chat.initModule( jqueryMap.$container );
+
+      spa.avtr.configModule({
+        chat_model : spa.model.chat,
+        people_model : spa.model.people
+      });
+
+      spa.avtr.initModule( jqueryMap.$nav );
 
 			$(window).bind( 'resize', onResize ).bind( 'hashchange', onHashchange ).trigger( 'hashchange' );
 
