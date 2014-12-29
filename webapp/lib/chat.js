@@ -69,7 +69,13 @@ chatObj = {
               if ( result_list.length > 0 ) {
                 result_map = result_list[ 0 ];
                 result_map.cid = cid;
-                sighIn( io, result_map, socket );
+
+                if ( ! chatterMap[ result_map._id ]) {
+                  sighIn( io, result_map, socket );
+                }
+                else {
+                  sighOut( io, socket.user_id );
+                }
               }
               else {
                 user_map.is_online = true;
