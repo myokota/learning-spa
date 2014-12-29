@@ -61,7 +61,7 @@ constructObj = function ( obj_type, obj_map, callback ) {
   checkSchema(
     obj_type, obj_map,
     function ( error_list ) {
-      if ( error_list.length == 0 ) {
+      if ( error_list.length === 0 ) {
         dbHnadle.collection(
           obj_type, 
           function ( outer_error, collection ) {
@@ -78,7 +78,7 @@ constructObj = function ( obj_type, obj_map, callback ) {
         );
       }
       else {
-        response.send({
+        callback({
           error_msg : 'Input document no valid',
           error_list : error_list
         });
@@ -95,9 +95,9 @@ readObj = function ( obj_type, find_map, fields_map, callback ) {
   }
   
   dbHnadle.collection(
-    request.params.obj_type,
+    obj_type,
     function ( outer_error, collection ) {
-      collection.findOne(
+      collection.find(
         find_map,
         function ( inner_error, result_map ) {
           callback( result_map );
@@ -117,7 +117,7 @@ updateObj = function ( obj_type, find_map, set_map, callback ) {
   checkSchema(
     obj_type, set_map,
     function ( error_list ) {
-      if ( error_list.length == 0 ) {
+      if ( error_list.length === 0 ) {
         dbHnadle.collection(
           obj_type,
           function ( outer_error, collection ) {
@@ -133,7 +133,7 @@ updateObj = function ( obj_type, find_map, set_map, callback ) {
         );
       }
       else {
-        response.send({
+        callback({
           error_msg : 'Input document no valid',
           error_list : error_list
         });
@@ -175,6 +175,7 @@ module.exports = {
 
 dbHnadle.open( function() {
   console.log( '** Connected to MongDB **' );
+  clearIsOnline();
 });
 
 (function ()  {
