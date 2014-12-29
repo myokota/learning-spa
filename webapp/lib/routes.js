@@ -1,6 +1,7 @@
 var 
   configRoutes,
   crud = require( './crud' ),
+  chat = require( './chat' ),
   makeMongoId = crud.makeMongoId;
 
 configRoutes = function( app, server ) {
@@ -61,21 +62,8 @@ configRoutes = function( app, server ) {
     );
   });
 
+  chat.connect( server );
 };
 
 module.exports = { configRoutes : configRoutes };
-
-dbHnadle.open( function() {
-  console.log( '** Connected to MongDB **' );
-});
-
-(function ()  {
-  var schema_name, schema_path;
-  for ( schema_name in objTypeMap ) {
-    if ( objTypeMap.hasOwnProperty( schema_name ) ) {
-      schema_path = __dirname + '/' + schema_name + '.json';
-      loadSchema ( schema_name, schema_path );
-    }
-  }
-}());
 
