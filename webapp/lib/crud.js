@@ -97,10 +97,9 @@ readObj = function ( obj_type, find_map, fields_map, callback ) {
   dbHnadle.collection(
     obj_type,
     function ( outer_error, collection ) {
-      collection.find(
-        find_map,
-        function ( inner_error, result_map ) {
-          callback( result_map );
+      collection.find( find_map, fields_map ).toArray(
+        function ( inner_error, map_list ) {
+          callback( map_list );
         }
       );
     }
