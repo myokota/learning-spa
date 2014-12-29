@@ -112,7 +112,14 @@ chatObj = {
           sighOut( io, socket.user_id );
         });
 
-        socket.on( 'updateavatar', function () {} );
+        socket.on( 'updateavatar', function ( avtr_map ) {
+          crud.update(
+            'user',
+            { '_id' : makeMongoId( avtr_map.person_id ) },
+            { css_map : avtr_map.css_map },
+            function ( result_list ) { emitUserList( io );}
+          );
+        });
       }
     );
 
